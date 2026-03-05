@@ -9,10 +9,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-      - name: Build with Make
-        run: make
-
-      - name: Run Test
-        run: ./my_app
+      # Makefile의 test 타겟 실행
+      - name: Environment and Execution Test
+        run: make test
