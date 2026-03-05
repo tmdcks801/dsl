@@ -17,10 +17,10 @@ clean:
 
 run: all
 	./$(TARGET)
-	
+
 test: all
-	@echo "1. [환경 테스트] GCC 버전 확인"
+	@echo "버전 확인"
 	$(CXX) --version
-	@echo ""
-	@echo "2. [실행 테스트] 프로그램 출력 확인"
+	@echo "\n\n"
+	@echo "프로그램 main 확인\n"
 	./$(TARGET)

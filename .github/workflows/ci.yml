@@ -12,6 +12,5 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # Makefile의 test 타겟 실행
       - name: Environment and Execution Test
         run: make test
