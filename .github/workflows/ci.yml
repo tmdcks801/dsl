@@ -14,3 +14,9 @@ jobs:
 
       - name: Environment and Execution Test
         run: make test
+
+      - name: Upload Build Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: pratice
+          path: my_app.exe
