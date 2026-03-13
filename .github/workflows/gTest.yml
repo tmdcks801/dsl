@@ -2,9 +2,9 @@ name: Ubuntu gTest CI
 
 on:
   push:
-    branches: [ "main" ]  # main 브랜치에 push될 때 실행
+    branches: [ "gTest" ]  # main 브랜치에 push될 때 실행
   pull_request:
-    branches: [ "main" ]  # PR이 올라올 때 실행
+    branches: [ "gTest" ]  # PR이 올라올 때 실행
 
 jobs:
   build-and-test:
