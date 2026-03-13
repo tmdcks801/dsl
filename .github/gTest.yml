@@ -1,0 +1,33 @@
+name: Ubuntu gTest CI
+
+on:
+  push:
+    branches: [ "main" ]  # main 브랜치에 push될 때 실행
+  pull_request:
+    branches: [ "main" ]  # PR이 올라올 때 실행
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest  # 최신 Ubuntu 환경 사용
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4  # 저장소 코드를 가상 환경으로 가져옴
+
+    - name: Install Google Test
+      # 로컬에서 입력했던 Bash 커맨드를 그대로 입력합니다.
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y libgtest-dev cmake
+        cd /usr/src/gtest
+        sudo cmake CMakeLists.txt
+        sudo make
+        sudo cp lib/*.a /usr/lib
+
+    - name: Compile with Makefile
+      # 작성하신 Makefile을 이용해 빌드합니다.
+      run: make
+
+    - name: Run Google Test
+      # 빌드된 결과물을 실행합니다.
+      run: ./run_tests

@@ -1,26 +1,14 @@
 CXX = g++
-CXXFLAGS = -Wall -Wextra -O2 -std=c++17
-TARGET = my_app.exe
-SRCS = main.cpp
-OBJS = $(SRCS:.cpp=.o)
+CXXFLAGS = -Wall -pthread
+LIBS = -lgtest -lgtest_main
+
+TARGET = run_tests
+SRCS = test_dsl.cpp
 
 all: $(TARGET)
 
-$(TARGET): $(OBJS)
-	$(CXX) $(CXXFLAGS) -o $(TARGET) $(OBJS)
-
-%.o: %.cpp
-	$(CXX) $(CXXFLAGS) -c $< -o $@
+$(TARGET): $(SRCS)
+	$(CXX) $(CXXFLAGS) -o $(TARGET) $(SRCS) $(LIBS)
 
 clean:
-	rm -f $(TARGET) $(OBJS)
-
-run: all
-	./$(TARGET)
-
-test: all
-	@echo "버전 확인"
-	$(CXX) --version
-	@echo "\n\n"
-	@echo "프로그램 main 확인\n"
-	./$(TARGET)
+	rm -f $(TARGET)
