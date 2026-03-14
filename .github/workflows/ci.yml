@@ -40,6 +40,7 @@ jobs:
 
       - name: Run Build Wrapper and Test
         run: |
+          make clean
           build-wrapper-linux-x86-64 --out-dir bw-output make test
 
       - name: SonarCloud Scan
