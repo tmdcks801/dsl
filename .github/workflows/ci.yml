@@ -2,9 +2,11 @@ name: C++ GCC CI with Makefile
 
 on:
   push:
-    branches: [ "main" ]
+    branches:
+      - '*'
   pull_request:
-    branches: [ "main" ]
+    branches:
+      - '*'
 
 jobs:
   build:
@@ -28,7 +30,7 @@ jobs:
 
       - name: Environment and Execution Test
         run: make test
-        
+
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
         env:
