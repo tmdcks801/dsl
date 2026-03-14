@@ -18,6 +18,13 @@ clean:
 run: all
 	./$(TARGET)
 
+# 정적 분석
+cppcheck:
+	cppcheck --enable=all --language=c++ --std=c++17 --suppress=missingIncludeSystem .
+tidy:
+	clang-tidy $(SRCS) -checks=* -- -std=c++17
+#-------여기까지
+
 test: all
 	@echo "버전 확인"
 	$(CXX) --version
