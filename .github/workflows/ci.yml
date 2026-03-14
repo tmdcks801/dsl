@@ -31,6 +31,17 @@ jobs:
       - name: Environment and Execution Test
         run: make test
 
+      - name: Install Build Wrapper
+        run: |
+          mkdir -p $HOME/.sonar
+          curl -sSLo $HOME/.sonar/build-wrapper-linux-x86.zip https://sonarcloud.io/static/cpp/build-wrapper-linux-x86.zip
+          unzip -o $HOME/.sonar/build-wrapper-linux-x86.zip -d $HOME/.sonar
+          echo "$HOME/.sonar/build-wrapper-linux-x86" >> $GITHUB_PATH
+
+      - name: Run Build Wrapper and Test
+        run: |
+          build-wrapper-linux-x86-64 --out-dir bw-output make test
+
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
         env:
