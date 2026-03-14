@@ -3,7 +3,10 @@
 
 TEST(CalculatorTest, HandleAddition) {
     Calculator calc;
-    EXPECT_EQ(calc.add(2, 3), 5);
+    const int a = 2;  
+    const int b = 3;
+    const int expected = 5;
+    EXPECT_EQ(calc.add(a, b), expected);
 }
 
 int main(int argc, char **argv) {

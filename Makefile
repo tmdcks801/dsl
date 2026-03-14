@@ -20,7 +20,7 @@ run: all
 cppcheck:
 	cppcheck --enable=all --language=c++ --std=c++17 --suppress=missingIncludeSystem .
 tidy:
-	clang-tidy $(SRCS) -checks=* -- -std=c++17
+	clang-tidy $(SRCS) -checks=-*,boost-*,bugprone-*,performance-*,readability-*,modernize-*,cppcoreguidelines-*,-modernize-use-trailing-return-type,-cppcoreguidelines-avoid-magic-numbers,-llvmlibc-* -- -std=c++17
 #-------여기까지
 
 test: all
