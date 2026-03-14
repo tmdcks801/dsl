@@ -3,6 +3,8 @@ name: C++ GCC CI with Makefile
 on:
   push:
     branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
 
 jobs:
   build:
@@ -11,12 +13,36 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Install Analysis Tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cppcheck clang-tidy
+
+      - name: Run Cppcheck
+        run: make cppcheck
+
+      - name: Run Clang-Tidy
+        run: make tidy
 
       - name: Environment and Execution Test
         run: make test
+        
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          args: >
+            -Dsonar.projectKey=your_project_key
+            -Dsonar.organization=your_org_key
+            -Dsonar.sources=.
+            -Dsonar.cfamily.build-wrapper-output=bw-output
 
       - name: Upload Build Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: pratice
+          name: pratice-binary
           path: my_app.exe
