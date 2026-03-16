@@ -2,7 +2,7 @@ CXX = g++
 CXXFLAGS = -Wall -pthread
 LIBS = -lgtest -lgtest_main
 
-TARGET = run_tests
+TARGET = my_app.exe
 SRCS = test_dsl.cpp
 
 all: $(TARGET)
