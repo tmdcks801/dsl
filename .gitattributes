@@ -1,0 +1,6 @@
+# 모든 줄 바꿈을 LF로 고정
+* text=auto eol=lf
+
+# C++ 소스 파일 명시, Diff 품질 향상
+*.cpp  text diff=cpp
+*.h    text diff=cpp
