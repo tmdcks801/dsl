@@ -1,0 +1,17 @@
+root = true
+
+[*]
+# 인코딩을 UTF-8로 고정
+charset = utf-8
+
+# 줄 바꿈 문자를 LF로 고정 (리눅스/서버 환경 호환성)
+end_of_line = lf
+
+# 파일 끝에 빈 줄 추가
+insert_final_newline = true
+
+# 행 끝의 공백 제거
+trim_trailing_whitespace = true
+
+# 저장할 때마다 코드 정렬
+format_on_save = true
