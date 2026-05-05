@@ -5,6 +5,7 @@ include_directories(${PROJECT_SOURCE_DIR}/include)
 add_library(rvc_core
   "hardware_interface.cpp"
   "sensor/sensor_interface.cpp"
+  "sensor/sensor_controller.cpp"
 )
 
 # 실제 프로그램 실행 파일

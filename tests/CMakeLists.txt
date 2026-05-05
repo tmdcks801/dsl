@@ -5,6 +5,9 @@ include_directories(${PROJECT_SOURCE_DIR}/include)
 # 테스트 실행 파일 생성
 add_executable(run_tests
 	sensor/sensor_interface.cpp
+
+	sensor/dust_sensor_controller.cpp
+	sensor/obstacle_sensor_controller.cpp
 )
 
 if(MSVC)

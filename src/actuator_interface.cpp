@@ -22,23 +22,3 @@ ActuatorStatus ActuatorInterface::GetStatus() {
   }
   return ActuatorStatus::kBad;
 }
-
-template <typename T>
-void ActuatorInterface<T>::SetAction(T action) {
-  int action_value = static_cast<int>(action);
-
-  auto bytes_write = file_system_->pwrite(device_id_, &action_value,
-                                          sizeof(int), kActuatorActionPos);
-
-  if (bytes_write != static_cast<ssize_t>(sizeof(int)) {
-    file_system_->pwrite(device_id_, &static_cast<int>(ActuatorStatus::kBad),
-                         sizeof(int),
-                         kActuatorStatusPos);
-    return;
-  }
-  else {
-    file_system_->pwrite(device_id_, &static_cast<int>(ActuatorStatus::kFine),
-                         sizeof(int),
-                         kActuatorStatusPos);
-  }
-}

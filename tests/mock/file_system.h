@@ -1,3 +1,6 @@
+#ifndef MOCK_FILE_SYSTEM_H
+#define MOCK_FILE_SYSTEM_H
+
 #include <file_system.h>
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
@@ -14,3 +17,5 @@ class MockFileSystem : public FileSystem {
   MOCK_METHOD(int, close, (int fd), (override));
   MOCK_METHOD(int, fstat, (int fd, struct stat*), (override));
 };
+
+#endif FILE_SYSTEM_H
