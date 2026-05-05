@@ -1,9 +1,6 @@
-# 테스트용 include
+ # 테스트용 include
 include_directories(${PROJECT_SOURCE_DIR}/tests)
 include_directories(${PROJECT_SOURCE_DIR}/include)
-
-# 테스트 활성화
-enable_testing()
 
 # 테스트 실행 파일 생성
 add_executable(run_tests
@@ -24,5 +21,5 @@ target_link_libraries(run_tests
 	GTest::gmock
 )
 
-# CTest에 등록
-add_test(NAME AllTests COMMAND run_tests)
+include(GoogleTest)
+gtest_discover_tests(run_tests)

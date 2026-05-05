@@ -24,6 +24,8 @@ class MockObserver : public Observer {
 
 class MockSensorInterface : public SensorInterface {
  public:
+  MockSensorInterface() : SensorInterface(0, nullptr) {}//+++
+
   MOCK_METHOD(std::optional<int>, ReadSensor, (), (noexcept, override));
 };
 
