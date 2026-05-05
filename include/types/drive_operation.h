@@ -3,7 +3,7 @@
 
 #include <cstdint>
 
-enum class DriveAction : int32_t
+enum class DriveOperation : int32_t
 { kForward, kBackward, kLeft, kRight, kStop };
 
 #endif
