@@ -1,29 +1,28 @@
 #ifndef ACTUATOR_INTERFACE_H
 #define ACTUATOR_INTERFACE_H
 
+#include <types/actuator_status.h>
 #include <hardware_interface.h>
-#include <concepts>
+#include <variant>
+#include <types/cleaner_action.h>
+#include <types/motor_action.h>
 
-enum class ActuatorStatus;
-enum class CleanerAction;
-enum class MotorAction;
+using ActuatorAction = std::variant<CleanerAction, MotorAction, int>;
 
 class ActuatorInterface : public HardwareInterface {
  public:
+  using HardwareInterface::HardwareInterface;
+
   virtual ~ActuatorInterface() = default;
 
   virtual ActuatorStatus GetStatus();
 
-  template <typename T>
-  requires std::_Is_nothrow_convertible_v(T, int)
-  ActuatorStatus SetAction(T action);
+  virtual ActuatorStatus SetAction(ActuatorAction action);
 
- private:
-  static constexpr int kActuatorActionPos = 0;
-  static constexpr int kActuatorStatusPos = sizeof(int);
+  private:
+  static constexpr int kActuatorStatusPos = 0;
+  static constexpr int kActuatorActionPos = sizeof(int);
 };
 
-using CleanerInterface = ActuatorInterface<CleanerAction>;
-using MotorInterface = ActuatorInterface<MotorAction>
 
 #endif
