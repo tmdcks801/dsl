@@ -123,3 +123,35 @@ TEST_F(ActuatorInterfaceTest, HappyInt) {
 
   EXPECT_EQ(actuator_->SetAction(action), ActuatorStatus::kFine);
 }
+
+//클리너 정상 작동
+TEST_F(ActuatorInterfaceTest, HappyCleaner) {
+  ActuatorAction action = CleanerAction::kPowerUp; 
+
+  EXPECT_CALL(*mock_fs_ptr_, pwrite(fake_fd_, _, sizeof(int), kActuatorActionPos))
+      .WillOnce([](int, const void* buf, size_t, off_t) {
+        EXPECT_EQ(*static_cast<const int*>(buf), static_cast<int>(CleanerAction::kPowerUp));
+        return sizeof(int);
+      });
+
+  EXPECT_CALL(*mock_fs_ptr_, pwrite(fake_fd_, _, sizeof(int), kActuatorStatusPos))
+      .WillOnce([](int, const void* buf, size_t, off_t) {
+        EXPECT_EQ(*static_cast<const int*>(buf), 1);
+        return sizeof(int);
+      });
+
+  EXPECT_EQ(actuator_->SetAction(action), ActuatorStatus::kFine);
+}
+
+//pwrite 1단계 성공, 2단계 실패
+TEST_F(ActuatorInterfaceTest, 1stFails_2ndFine) {
+  ActuatorAction action = CleanerAction::kOn;
+
+  EXPECT_CALL(*mock_fs_ptr_, pwrite(fake_fd_, _, sizeof(int), kActuatorActionPos))
+      .WillOnce(Return(sizeof(int)));
+
+  EXPECT_CALL(*mock_fs_ptr_, pwrite(fake_fd_, _, sizeof(int), kActuatorStatusPos))
+      .WillOnce(Return(0));
+
+  EXPECT_EQ(actuator_->SetAction(action), ActuatorStatus::kFine);
+}

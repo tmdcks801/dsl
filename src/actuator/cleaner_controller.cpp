@@ -5,6 +5,9 @@
 
 void CleanerController::SetOperation(ActuatorOperation operation) {
   auto operation_value = std::get<CleanerAction>(operation);
-  interfaces_[0].hardware_interface->SetAction(
-      static_cast<int>(operation_value));
+
+  if (interfaces_[0].hardware_interface->SetAction(
+          static_cast<int>(operation_value)) == ActuatorStatus::kBad) {
+    observer_->Notify(Event::kHWFault);
+  };
 }

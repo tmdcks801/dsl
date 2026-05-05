@@ -4,12 +4,15 @@ include_directories(${PROJECT_SOURCE_DIR}/include)
 
 # 테스트 실행 파일 생성
 add_executable(run_tests
-	# sensor/sensor_interface.cpp
+	sensor/sensor_interface.cpp
 
-	# sensor/dust_sensor_controller.cpp
-	# sensor/obstacle_sensor_controller.cpp
+	sensor/dust_sensor_controller.cpp
+	sensor/obstacle_sensor_controller.cpp
 
 	actuator/actuator_interface.cpp
+
+	actuator/cleaner_controller.cpp
+	actuator/drive_controller.cpp
 )
 
 if(MSVC)
