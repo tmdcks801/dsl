@@ -7,7 +7,8 @@ enum class Event {
   kRightObstacle,
   kHighDust,
   kTimerExpired,
-  kHWFault
+  kHWFault,
+  kSystemShutdown
 };
 
 #endif

@@ -4,8 +4,8 @@ include_directories(${PROJECT_SOURCE_DIR}/include)
 # 여기에 다른 구현체 .cpp 파일 추가 예정
 add_library(rvc_core
   hardware_interface.cpp
-  # sensor/sensor_interface.cpp
-  # sensor/sensor_controller.cpp
+  sensor/sensor_interface.cpp
+  sensor/sensor_controller.cpp
 
   actuator/actuator_interface.cpp
   actuator/cleaner_controller.cpp
