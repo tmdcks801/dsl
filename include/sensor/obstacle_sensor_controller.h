@@ -8,10 +8,12 @@
 
 class ObstacleSensorController : public SensorController {
  public:
-  explicit ObstacleSensorController(std::unique_ptr<SensorObserver> observer,
-                                    const std::string &file_path_prefix)
-      : SensorController(kMaxSensor, std::move(observer),
-                         std::make_unique<SensorEntry[]>(kMaxSensor),
+  explicit ObstacleSensorController(
+      std::unique_ptr<Observer> observer,
+      std::unique_ptr<InterfaceEntry<SensorInterface>[]> interfaces,
+      const std::string &file_path_prefix)
+      : SensorController(std::move(observer), std::move(interfaces),
+                         kMaxSensor,
                          file_path_prefix, sensor_events_) {}
 
  private:

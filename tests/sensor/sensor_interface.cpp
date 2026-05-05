@@ -13,7 +13,7 @@ using ::testing::Optional;
 
 class SensorInterfaceTest : public ::testing::Test {
  protected:
-  static constexpr std::string kTestFileName = "OBSTACLE_t";
+  static constexpr std::string kTestFileName = "TEST";
   static constexpr int kFakeFd = 42;
 
   std::unique_ptr<MockFileSystem> mock_fs_;

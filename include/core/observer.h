@@ -5,7 +5,7 @@ enum class Event;
 
 class Observer {
  public:
-  virtual void Notify(Event event);
+  virtual void Notify(Event event) = 0;
 
   virtual ~Observer() = default;
 };
