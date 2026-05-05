@@ -438,6 +438,30 @@ CMakeFiles/
 CMakeScripts/
 cmake_install.cmake
 Makefile
+/cmake-build-*/
 *.sln
 *.vcxproj
 *.filters
+**/_deps/
+
+# shell scripts
+*.sh
+
+# 컴파일된 정적 라이브러리 및 오브젝트 파일
+*.a
+*.o
+*.lib
+*.obj
+
+# 실행 파일 (확장자가 없는 경우와 윈도우용 .exe 모두 포함)
+src/rvc_app
+src/rvc_app.exe
+tests/run_tests
+tests/run_tests.exe
+
+Testing/
+tests/CTestTestfile.cmake
+cmake_clean.txt
+*.cmake
+
+.cache/

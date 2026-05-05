@@ -7,9 +7,15 @@ enable_testing()
 
 # 테스트 실행 파일 생성
 add_executable(run_tests
-	test_main.cpp 
-	# 여기에 다른 테스트 파일 추가 예정
+	sensor/sensor_interface.cpp
 )
+
+if(MSVC)
+    target_compile_options(run_tests PRIVATE /W4) 
+else()
+    target_compile_options(run_tests PRIVATE -Wall -Wextra)
+endif()
+
 
 # 라이브러리 연결 (로직 + gTest)
 target_link_libraries(run_tests
