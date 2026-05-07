@@ -14,11 +14,12 @@ std::unique_ptr<RvcState> ErrorState::Handle(Event event) {
 void ErrorState::Enter() {
   EmergencyStop();
   DisplayFatalError();
+  WriteErrorLog();
 
   timer_ = kDisplayErrorDuration;
 }
 
-void ErrorState::Exit() { WriteErrorLog(); }
+void ErrorState::Exit() {  }
 
 void ErrorState::EmergencyStop() {
   drive_controller_->SetOperation(DriveOperation::kStop);

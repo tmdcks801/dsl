@@ -21,7 +21,7 @@ class ObstacleSensorController : public SensorController {
     return raw_data < kObstacleThreshold;
   }
 
-  static constexpr int kObstacleThreshold = std::numeric_limits<int>::max() / 2;
+  static constexpr int kObstacleThreshold = 0x3FFF'FFFF;
   static constexpr std::size_t kMaxSensor = 3;
 
   static constexpr std::array<Event, kMaxSensor> sensor_events_ = {

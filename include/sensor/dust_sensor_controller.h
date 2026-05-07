@@ -20,7 +20,7 @@ class DustSensorController : public SensorController {
     return raw_data > kDustThreshold;
   }
 
-  static constexpr int kDustThreshold = std::numeric_limits<int>::max() / 2;
+  static constexpr int kDustThreshold = 0x3FFF'FFFF;
   static constexpr int kMaxSensor = 1;
 
   static constexpr std::array<Event, 1> sensor_events_ = {Event::kHighDust};
