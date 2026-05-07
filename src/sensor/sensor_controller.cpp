@@ -11,8 +11,14 @@ void SensorController::CheckSensor() const noexcept {
 
     auto raw_data = sensor_interface->ReadSensor();
 
-    if (!raw_data.has_value() || *raw_data < 0) {
-      observer_->Notify(kHWError);
+    if (!raw_data.has_value()){
+      observer_->Notify(Event::kDataSizeFault);
+      break;
+    }
+
+
+    if (*raw_data < 0) {
+      observer_->Notify(Event::kDataMinusFault);
       break;
     }
 

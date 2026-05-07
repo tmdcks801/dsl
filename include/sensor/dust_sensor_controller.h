@@ -9,14 +9,14 @@
 class DustSensorController : public SensorController {
  public:
   explicit DustSensorController(
-      std::unique_ptr<Observer> observer,
+      Observer* observer,
       std::unique_ptr<InterfaceEntry<SensorInterface>[]> interfaces,
       const std::string &file_path_prefix)
-      : SensorController(std::move(observer), std::move(interfaces), kMaxSensor,
+      : SensorController(observer, std::move(interfaces), kMaxSensor,
                          file_path_prefix, sensor_events_) {}
 
  private:
-  [[nodiscard]] bool CheckValue(int raw_data) const noexcept override {
+  [[nodiscard]] virtual bool CheckValue(int raw_data) const noexcept override {
     return raw_data > kDustThreshold;
   }
 

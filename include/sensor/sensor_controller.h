@@ -9,9 +9,9 @@ class SensorController : public HardwareController<SensorInterface> {
  public:
   using HardwareController<SensorInterface>::HardwareController;
 
-  virtual ~SensorController() = default;
+  ~SensorController() override = default;
 
-  void CheckSensor() const noexcept;
+  virtual void CheckSensor() const noexcept;
 
  protected:
   [[nodiscard]] virtual bool CheckValue(int raw_data) const noexcept = 0;

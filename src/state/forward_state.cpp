@@ -3,10 +3,6 @@
 #include <state/avoidance_state.h>
 
 std::unique_ptr<RvcState> ForwardState::Handle(Event event) {
-  if (event == Event::kHWFault) {
-    return std::unique_ptr<ErrorState>(observer_, drive_controller_,
-                                       cleaner_controller_);
-  }
 
   if (event == Event::kHighDust) {
     cleaner_controller_->SetOperation(CleanerAction::kPowerUp);
@@ -15,14 +11,15 @@ std::unique_ptr<RvcState> ForwardState::Handle(Event event) {
 
   if (event == Event::kTimerExpired) {
     cleaner_controller_->SetOperation(CleanerAction::kOn);
+    timer_ = Seconds::max();
   }
 
   if (event == Event::kFrontObstacle) {
-    return std::unique_ptr<AvoidanceState>(observer, drive_controller_,
+    return std::make_unique<AvoidanceState>(observer_, drive_controller_,
                                            cleaner_controller_);
   }
 
-  return nullptr;
+  return RvcState::Handle(event);
 }
 
 void ForwardState::Enter() {

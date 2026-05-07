@@ -13,7 +13,7 @@ class ActuatorInterface : public HardwareInterface {
  public:
   using HardwareInterface::HardwareInterface;
 
-  virtual ~ActuatorInterface() = default;
+  ~ActuatorInterface() override =  default;
 
   virtual ActuatorStatus GetStatus();
 

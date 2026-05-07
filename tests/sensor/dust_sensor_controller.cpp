@@ -1,14 +1,12 @@
-#include <gtest/gtest.h>
+ #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 
 #include <memory>
 #include <limits>
 #include <optional>
 
-// Headers based on your project structure
 #include <sensor/dust_sensor_controller.h>
 #include <sensor/sensor_interface.h>
-#include <core/observer.h> 
 #include <types/event.h>
 
 #include <mock/core/observer.h>
@@ -30,30 +28,35 @@ class TestableDustSensorController : public DustSensorController {
 
 class DustSensorControllerTest : public ::testing::Test {
  protected:
-  MockObserver* mock_observer_ptr_ = nullptr;
+  void SetUp() override {
+    mock_observer_res_ = std::make_unique<MockObserver>();
+    mock_observer_ptr_ = mock_observer_res_.get();
+
+    auto interfaces = std::make_unique<InterfaceEntry<SensorInterface>[]>(kTestSensorCount);
+
+    EXPECT_CALL(*mock_observer_ptr_, Notify(Event::kFileOpenFault)).Times(testing::AnyNumber());
+
+    controller_ = std::make_unique<TestableDustSensorController>(
+        mock_observer_ptr_,
+        std::move(interfaces),
+        "dust_");
+  }
+
+  std::unique_ptr<MockObserver> mock_observer_res_;
+  MockObserver* mock_observer_ptr_;
   std::unique_ptr<TestableDustSensorController> controller_;
 
   static constexpr int kThreshold = std::numeric_limits<int>::max() / 2;
   static constexpr std::size_t kTestSensorCount = 1;
-
-  void SetUp() override {
-    auto mock_observer = std::make_unique<MockObserver>();
-    mock_observer_ptr_ = mock_observer.get();
-
-    auto interfaces = std::make_unique<InterfaceEntry<SensorInterface>[]>(kTestSensorCount);
-
-    EXPECT_CALL(*mock_observer_ptr_, Notify(Event::kHWFault)).Times(testing::AnyNumber());
-
-    controller_ = std::make_unique<TestableDustSensorController>(
-        std::move(mock_observer), 
-        std::move(interfaces),
-        "dust_");
-  }
 };
 
 // 읽은 값 == MAX
 TEST_F(DustSensorControllerTest, NotifiesHighDustAtIntMax) {
   auto mock_sensor = std::make_unique<MockSensorInterface>();
+
+  ASSERT_NE(controller_, nullptr);
+
+  ASSERT_NE(mock_observer_ptr_, nullptr);
   EXPECT_CALL(*mock_sensor, ReadSensor()).WillOnce(Return(std::numeric_limits<int>::max()));
 
   EXPECT_CALL(*mock_observer_ptr_, Notify(Event::kHighDust)).Times(1);
@@ -111,7 +114,7 @@ TEST_F(DustSensorControllerTest, NotifiesFaultOnReadFailure) {
   auto mock_sensor = std::make_unique<MockSensorInterface>();
   EXPECT_CALL(*mock_sensor, ReadSensor()).WillOnce(Return(std::nullopt));
 
-  EXPECT_CALL(*mock_observer_ptr_, Notify(Event::kHWFault)).Times(1);
+  EXPECT_CALL(*mock_observer_ptr_, Notify(Event::kDataSizeFault)).Times(1);
 
   controller_->InjectMockSensor(std::move(mock_sensor));
   controller_->CheckSensor();
@@ -122,7 +125,7 @@ TEST_F(DustSensorControllerTest, NotifiesFaultOnNegativeValues) {
   auto mock_sensor = std::make_unique<MockSensorInterface>();
   EXPECT_CALL(*mock_sensor, ReadSensor()).WillOnce(Return(-500));
 
-  EXPECT_CALL(*mock_observer_ptr_, Notify(Event::kHWFault)).Times(1);
+  EXPECT_CALL(*mock_observer_ptr_, Notify(Event::kDataMinusFault)).Times(1);
 
   controller_->InjectMockSensor(std::move(mock_sensor));
   controller_->CheckSensor();

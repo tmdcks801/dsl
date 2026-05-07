@@ -1,5 +1,16 @@
 cmake_minimum_required(VERSION 3.14)
+
+if(NOT MSCV)
+	set(CMAKE_CXX_COMPILER "clang++")
+endif()
+
 project(rvc-controller CXX)
+
+option(USE_MULL "Enable Mull mutation testing" OFF)
+if(USE_MULL)
+    set(MULL_PLUGIN "/usr/lib/mull-ir-frontend-21") 
+    set(MULL_FLAGS "-fpass-plugin=${MULL_PLUGIN}" "-fembed-bitcode=all" "-grecord-command-line" "-fno-inline")
+endif()
 
 # 테스트 활성화
 enable_testing()
@@ -10,7 +21,13 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 if(MSVC)
 	add_compile_options(/utf-8)
+endif()
 
+option(USE_COVERAGE "Enable code coverage" OFF)
+
+if(USE_COVERAGE)
+    add_compile_options(--coverage)
+    add_link_options(--coverage)
 endif()
 
 # gTest & gMock 가져오기

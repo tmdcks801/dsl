@@ -11,12 +11,10 @@ using ::testing::AnyNumber;
 class ObstacleSensorControllerTest : public ::testing::Test {
  protected:
   void SetUp() override {
-    auto mock_observer = std::make_unique<MockObserver>();
-    mock_observer_ptr_ = mock_observer.get();
+    mock_observer_res_ = std::make_unique<MockObserver>();
+    mock_observer_ptr_ = mock_observer_res_.get();
 
     auto interfaces = std::make_unique<InterfaceEntry<SensorInterface>[]>(3);
-
-    
 
     for (int i = 0; i < kSensorCount; ++i) {
       auto mock_file_system = std::make_unique<MockFileSystem>();
@@ -31,7 +29,8 @@ class ObstacleSensorControllerTest : public ::testing::Test {
     }
 
     controller_ = std::make_unique<ObstacleSensorController>(
-        std::move(mock_observer), std::move(interfaces), kFakeFileName);
+        mock_observer_ptr_,
+        std::move(interfaces), kFakeFileName);
   }
 
   static constexpr int kSensorCount = 3;
@@ -43,6 +42,7 @@ class ObstacleSensorControllerTest : public ::testing::Test {
       Event::kLeftObstacle,
   };
 
+  std::unique_ptr<MockObserver> mock_observer_res_;
   MockObserver* mock_observer_ptr_;
   std::unique_ptr<ObstacleSensorController> controller_;
   MockSensorInterface* mock_sensors_[3];
@@ -57,10 +57,7 @@ TEST_F(ObstacleSensorControllerTest, FrontObstacleDetected) {
   EXPECT_CALL(*mock_sensors_[2], ReadSensor())
       .WillOnce(Return(kThreshold + 100));
 
-  EXPECT_CALL(*mock_observer_ptr_, Notify(Event::kHWFault)).Times(0);
   EXPECT_CALL(*mock_observer_ptr_, Notify(Event::kFrontObstacle)).Times(1);
-
-  
 
   controller_->CheckSensor();
 }
@@ -74,7 +71,6 @@ TEST_F(ObstacleSensorControllerTest, FrontLeftObstalceDetected) {
   EXPECT_CALL(*mock_sensors_[2], ReadSensor())
       .WillOnce(Return(kThreshold - 100));
 
-  EXPECT_CALL(*mock_observer_ptr_, Notify(Event::kHWFault)).Times(0);
   EXPECT_CALL(*mock_observer_ptr_, Notify(Event::kFrontObstacle)).Times(1);
   EXPECT_CALL(*mock_observer_ptr_, Notify(Event::kLeftObstacle)).Times(1);
 
@@ -90,7 +86,6 @@ TEST_F(ObstacleSensorControllerTest, NothingDetected) {
   EXPECT_CALL(*mock_sensors_[2], ReadSensor())
       .WillOnce(Return(kThreshold + 100));
 
-  EXPECT_CALL(*mock_observer_ptr_, Notify(Event::kHWFault)).Times(0);
   EXPECT_CALL(*mock_observer_ptr_, Notify(_)).Times(0);
 
   controller_->CheckSensor();
@@ -105,7 +100,6 @@ TEST_F(ObstacleSensorControllerTest, JustBelowThreshold) {
   EXPECT_CALL(*mock_sensors_[2], ReadSensor())
       .WillOnce(Return(kThreshold + 100));
 
-  EXPECT_CALL(*mock_observer_ptr_, Notify(Event::kHWFault)).Times(0);
   EXPECT_CALL(*mock_observer_ptr_, Notify(Event::kFrontObstacle)).Times(1);
 
   controller_->CheckSensor();
@@ -120,7 +114,6 @@ TEST_F(ObstacleSensorControllerTest, ExactlyAtThreshold) {
   EXPECT_CALL(*mock_sensors_[2], ReadSensor())
       .WillOnce(Return(kThreshold + 100));
 
-  EXPECT_CALL(*mock_observer_ptr_, Notify(Event::kHWFault)).Times(0);
   EXPECT_CALL(*mock_observer_ptr_, Notify(_)).Times(0);
 
   controller_->CheckSensor();
@@ -134,7 +127,6 @@ TEST_F(ObstacleSensorControllerTest, MinimumValue) {
   EXPECT_CALL(*mock_sensors_[2], ReadSensor())
       .WillOnce(Return(kThreshold + 100));
 
-  EXPECT_CALL(*mock_observer_ptr_, Notify(Event::kHWFault)).Times(0);
   EXPECT_CALL(*mock_observer_ptr_, Notify(Event::kFrontObstacle)).Times(1);
 
   controller_->CheckSensor();
@@ -148,7 +140,6 @@ TEST_F(ObstacleSensorControllerTest, MaximumValue) {
   EXPECT_CALL(*mock_sensors_[2], ReadSensor())
       .WillOnce(Return(kThreshold + 100));
 
-  EXPECT_CALL(*mock_observer_ptr_, Notify(Event::kHWFault)).Times(0);
   EXPECT_CALL(*mock_observer_ptr_, Notify(_)).Times(0);
 
   controller_->CheckSensor();
@@ -162,7 +153,7 @@ TEST_F(ObstacleSensorControllerTest, SensorReadFail) {
   EXPECT_CALL(*mock_sensors_[1], ReadSensor())
       .Times(0);
 
-  EXPECT_CALL(*mock_observer_ptr_, Notify(Event::kHWFault)).Times(1);
+  EXPECT_CALL(*mock_observer_ptr_, Notify(Event::kDataSizeFault)).Times(1);
 
   controller_->CheckSensor();
 }
@@ -173,7 +164,7 @@ TEST_F(ObstacleSensorControllerTest, ReceiveWrongValue) {
   EXPECT_CALL(*mock_sensors_[1], ReadSensor()).Times(0);
   EXPECT_CALL(*mock_sensors_[2], ReadSensor()).Times(0);
 
-  EXPECT_CALL(*mock_observer_ptr_, Notify(Event::kHWFault)).Times(1);
+  EXPECT_CALL(*mock_observer_ptr_, Notify(Event::kDataMinusFault)).Times(1);
 
    controller_->CheckSensor();
 }
@@ -184,7 +175,7 @@ TEST_F(ObstacleSensorControllerTest, MiddleSensorFail) {
   EXPECT_CALL(*mock_sensors_[1], ReadSensor()).WillOnce(Return(std::nullopt));
 
   EXPECT_CALL(*mock_observer_ptr_, Notify(Event::kFrontObstacle)).Times(0);
-  EXPECT_CALL(*mock_observer_ptr_, Notify(Event::kHWFault)).Times(1);
+  EXPECT_CALL(*mock_observer_ptr_, Notify(Event::kDataSizeFault)).Times(1);
 
   controller_->CheckSensor();
 }

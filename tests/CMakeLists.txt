@@ -13,6 +13,12 @@ add_executable(run_tests
 
 	actuator/cleaner_controller.cpp
 	actuator/drive_controller.cpp
+	core/rvc_system.cpp
+
+	state/avoidance_state.cpp
+	state/backward_state.cpp
+	state/forward_state.cpp
+	state/error_state.cpp
 )
 
 if(MSVC)

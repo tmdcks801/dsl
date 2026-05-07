@@ -7,7 +7,7 @@
 
 class MockFileSystem : public FileSystem {
  public:
-  MOCK_METHOD(int, open, (const char* path, int flags), (override));
+  MOCK_METHOD(int, open, (const char* path, int flags, mode_t mode), (override));
   MOCK_METHOD(off_t, lseek, (int fd, off_t offset, int whence), (override));
   MOCK_METHOD(ssize_t, pread, (int fd, void* buf, size_t count, off_t offset),
               (override));

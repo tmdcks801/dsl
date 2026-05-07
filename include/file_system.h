@@ -9,7 +9,7 @@ class FileSystem {
  public:
   virtual ~FileSystem() = default;
 
-  virtual int open(const char* path, int flags) { return ::open(path, flags); }
+  virtual int open(const char* path, int flags, mode_t mode) { return ::open(path, flags, mode); }
 
   virtual int fstat(int fd, struct stat* buf) { return ::fstat(fd, buf); }
 
