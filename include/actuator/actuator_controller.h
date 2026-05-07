@@ -14,7 +14,7 @@ class ActuatorController : public HardwareController<ActuatorInterface> {
  public:
   using HardwareController<ActuatorInterface>::HardwareController;
 
-  virtual ~ActuatorController() = default;
+  ~ActuatorController() override = default;
 
   virtual void SetOperation(ActuatorOperation operation) = 0;
 };

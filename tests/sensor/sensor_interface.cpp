@@ -29,7 +29,7 @@ class SensorInterfaceTest : public ::testing::Test {
 
 // ReadSensor 성공 (정확히 int 크기 만큼 읽기)
 TEST_F(SensorInterfaceTest, ReadSensorSuccess) {
-  EXPECT_CALL(*mock_ptr_, open(_, _)).WillOnce(Return(kFakeFd));
+  EXPECT_CALL(*mock_ptr_, open(_, _, _)).WillOnce(Return(kFakeFd));
 
   EXPECT_CALL(*mock_ptr_, fstat(kFakeFd, _))
       .WillOnce([](int fd, struct stat *buf) {
@@ -59,7 +59,7 @@ TEST_F(SensorInterfaceTest, ReadSensorSuccess) {
 
 // ReadSensor 실패 (파일 크기가 int 미만)
 TEST_F(SensorInterfaceTest, ReadSensorFailWhenPartialSize) {
-  EXPECT_CALL(*mock_ptr_, open(_, _)).WillOnce(Return(kFakeFd));
+  EXPECT_CALL(*mock_ptr_, open(_, _, _)).WillOnce(Return(kFakeFd));
 
   //+ 더 작은 크기의 파일 mock 추가
   EXPECT_CALL(*mock_ptr_, fstat(kFakeFd, _))
@@ -81,7 +81,7 @@ TEST_F(SensorInterfaceTest, ReadSensorFailWhenPartialSize) {
 
 // ReadSensor 실패 (파일 크기가 int 같음 && 실제 읽은 데이터는 적음)
 TEST_F(SensorInterfaceTest, ReadSensorFailWhenPartialRead) {
-  EXPECT_CALL(*mock_ptr_, open(_, _)).WillOnce(Return(kFakeFd));
+  EXPECT_CALL(*mock_ptr_, open(_, _, _)).WillOnce(Return(kFakeFd));
 
   EXPECT_CALL(*mock_ptr_, fstat(kFakeFd, _))
       .WillOnce([](int fd, struct stat *buf) {
@@ -103,7 +103,7 @@ TEST_F(SensorInterfaceTest, ReadSensorFailWhenPartialRead) {
 
 // ReadSensor 실패 (파일 크기가 int 초과)
 TEST_F(SensorInterfaceTest, ReadSensorFailWhenOverSize) {
-  EXPECT_CALL(*mock_ptr_, open(_, _)).WillOnce(Return(kFakeFd));
+  EXPECT_CALL(*mock_ptr_, open(_, _, _)).WillOnce(Return(kFakeFd));
 
   EXPECT_CALL(*mock_ptr_, fstat(kFakeFd, _))
       .WillOnce([](int fd, struct stat *buf) {
@@ -124,7 +124,7 @@ TEST_F(SensorInterfaceTest, ReadSensorFailWhenOverSize) {
 
 //+ ReadSensor 실패 (fstat 자체 에러) 추가
 TEST_F(SensorInterfaceTest, ReadSensorFailWhenFstatFails) {
-  EXPECT_CALL(*mock_ptr_, open(_, _)).WillOnce(Return(kFakeFd));
+  EXPECT_CALL(*mock_ptr_, open(_, _, _)).WillOnce(Return(kFakeFd));
 
   EXPECT_CALL(*mock_ptr_, fstat(kFakeFd, _)).WillOnce(Return(-1));
 

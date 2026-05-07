@@ -11,8 +11,6 @@
 #include <span>
 #include <string>
 
-enum class Event;
-
 template <typename T>
   requires std::derived_from<T, HardwareInterface>
 struct InterfaceEntry {
@@ -24,15 +22,15 @@ template <typename T>
   requires std::derived_from<T, HardwareInterface>
 class HardwareController {
  public:
-  explicit HardwareController(std::unique_ptr<Observer> observer,
+  explicit HardwareController(Observer* observer,
                               std::unique_ptr<InterfaceEntry<T>[]> interfaces,
                               std::size_t count,
                               const std::string& file_path_prefix,
                               std::span<const Event> interface_events)
-      : observer_(std::move(observer)),
+      : observer_(observer),
         interfaces_(std::move(interfaces)),
         interface_count_(count) {
-    for (int i = 0; i < interface_count_; ++i) {
+    for (std::size_t i = 0; i < interface_count_; ++i) {
       if (interfaces_[i].hardware_interface != nullptr) {
         continue;
       }
@@ -42,8 +40,8 @@ class HardwareController {
       hardware_interface = HardwareInterface::Create<T>(file_path);
       event = interface_events[i];
 
-      if (hardware_interface == nullptr) {
-        observer_->Notify(kHWError);
+      if (observer_ && hardware_interface == nullptr) {
+        observer_->Notify(Event::kFileOpenFault);
         break;
       }
     }
@@ -51,10 +49,10 @@ class HardwareController {
 
   virtual ~HardwareController() = default;
 
- protected:
-  static constexpr Event kHWError = Event::kHWFault;
+  virtual void AddObserver(Observer* observer) { observer_ = observer; }
 
-  std::unique_ptr<Observer> observer_;
+ protected:
+  Observer* observer_;
   std::unique_ptr<InterfaceEntry<T>[]> interfaces_;
 
   const std::size_t interface_count_;

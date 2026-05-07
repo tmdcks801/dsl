@@ -9,20 +9,20 @@
 class ObstacleSensorController : public SensorController {
  public:
   explicit ObstacleSensorController(
-      std::unique_ptr<Observer> observer,
+      Observer* observer,
       std::unique_ptr<InterfaceEntry<SensorInterface>[]> interfaces,
       const std::string &file_path_prefix)
-      : SensorController(std::move(observer), std::move(interfaces),
+      : SensorController(observer, std::move(interfaces),
                          kMaxSensor,
                          file_path_prefix, sensor_events_) {}
 
  private:
-  [[nodiscard]] bool CheckValue(int raw_data) const noexcept override {
+  [[nodiscard]] virtual bool CheckValue(int raw_data) const noexcept override {
     return raw_data < kObstacleThreshold;
   }
 
   static constexpr int kObstacleThreshold = std::numeric_limits<int>::max() / 2;
-  static constexpr int kMaxSensor = 3;
+  static constexpr std::size_t kMaxSensor = 3;
 
   static constexpr std::array<Event, kMaxSensor> sensor_events_ = {
       Event::kFrontObstacle,

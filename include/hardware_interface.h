@@ -19,12 +19,11 @@ class HardwareInterface {
 
   template <typename T>
     requires std::derived_from<T, HardwareInterface>
-  static std::unique_ptr<T> Create(
-      const std::string &file_name,
+  static std::unique_ptr<T> Create(const std::string &file_name,
                                    std::unique_ptr<FileSystem> file_system =
                                        std::make_unique<FileSystem>()) {
     const int file_descriptor =
-        file_system->open(file_name.c_str(), O_RDONLY | O_NONBLOCK);
+        file_system->open(file_name.c_str(), O_RDWR | O_CREAT, 0666);
 
     if (file_descriptor == -1) {
       return nullptr;

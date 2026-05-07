@@ -9,7 +9,7 @@ class SensorInterface : public HardwareInterface {
  public:
   using HardwareInterface::HardwareInterface;
 
-  virtual ~SensorInterface() = default;
+  ~SensorInterface() override = default;
 
   [[nodiscard]] virtual std::optional<int> ReadSensor() noexcept;
 

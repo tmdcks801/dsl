@@ -1,6 +1,7 @@
 #include <state/error_state.h>
 
 #include <iostream>
+#include <iomanip>
 
 std::unique_ptr<RvcState> ErrorState::Handle(Event event) {
   if (event == Event::kTimerExpired) {
@@ -38,6 +39,8 @@ void ErrorState::DisplayFatalError() {
 void ErrorState::WriteErrorLog() {
   std::cout << "[LOG] Writing fatal error log to persistent storage..."
             << std::endl;
-  std::cout << "[LOG] Error Code: 0xDEADBEEF" << std::endl;
+  std::cout << "[LOG] Error Code: 0x" << std::hex << std::setw(8)
+            << std::setfill('0') << static_cast<uint32_t>(error_event_)
+            << std::dec << std::endl; 
   std::cout << "[LOG] State: ErrorState transition complete." << std::endl;
 }

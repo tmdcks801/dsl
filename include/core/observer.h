@@ -1,7 +1,7 @@
 #ifndef SENSOR_OBSERVER_H
 #define SENSOR_OBSERVER_H
 
-enum class Event;
+#include <types/event.h>
 
 class Observer {
  public:

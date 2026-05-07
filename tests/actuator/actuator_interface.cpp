@@ -23,7 +23,7 @@ class ActuatorInterfaceTest : public ::testing::Test {
     auto mock_fs = std::make_unique<NiceMock<MockFileSystem>>();
     mock_fs_ptr_ = mock_fs.get(); 
 
-    ON_CALL(*mock_fs_ptr_, open(_, _)).WillByDefault(Return(fake_fd_));
+    ON_CALL(*mock_fs_ptr_, open(_, _, _)).WillByDefault(Return(fake_fd_));
 
     actuator_ = HardwareInterface::Create<ActuatorInterface>(
         "/dev/dummy_actuator", 

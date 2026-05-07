@@ -8,6 +8,6 @@ void CleanerController::SetOperation(ActuatorOperation operation) {
 
   if (interfaces_[0].hardware_interface->SetAction(
           static_cast<int>(operation_value)) == ActuatorStatus::kBad) {
-    observer_->Notify(Event::kHWFault);
+    observer_->Notify(interfaces_[0].event);
   };
 }

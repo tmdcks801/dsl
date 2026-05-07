@@ -19,27 +19,26 @@ using ::testing::Return;
 class CleanerControllerTest : public ::testing::Test {
  protected:
   void SetUp() override {
-    auto mock_observer_ptr = std::make_unique<MockObserver>();
-    mock_observer = mock_observer_ptr.get();
+    mock_observer_res_ = std::make_unique<MockObserver>();
+    mock_observer_ptr_ = mock_observer_res_.get();
+
+    
 
     auto mock_interface_ptr = std::make_unique<MockActuatorInterface>();
     mock_interface = mock_interface_ptr.get();
 
     auto interfaces = std::make_unique<InterfaceEntry<ActuatorInterface>[]>(1);
     interfaces[0].hardware_interface = std::move(mock_interface_ptr);
-    interfaces[0].event = Event::kHWFault;
-
-    std::vector<Event> events = {Event::kHWFault};
+    interfaces[0].event = Event::kCleanerFault;
 
     controller = std::make_unique<CleanerController>(
-        std::move(mock_observer_ptr), 
+        mock_observer_ptr_,
         std::move(interfaces), 
-        1, 
-        "mock_cleaner_dev", 
-        events);
-  }
+        "mock_cleaner_dev");
 
-  MockObserver* mock_observer;
+  }
+  std::unique_ptr<MockObserver> mock_observer_res_;
+  MockObserver* mock_observer_ptr_;
   MockActuatorInterface* mock_interface;
   
   std::unique_ptr<CleanerController> controller;
@@ -52,7 +51,7 @@ TEST_F(CleanerControllerTest, SetHappyPath) {
   EXPECT_CALL(*mock_interface, SetAction(Eq(expected_action)))
       .WillOnce(Return(ActuatorStatus::kFine));
 
-  EXPECT_CALL(*mock_observer, Notify(_)).Times(0);
+  EXPECT_CALL(*mock_observer_ptr_, Notify(_)).Times(0);
 
   controller->SetOperation(CleanerAction::kOn);
 }
@@ -64,7 +63,7 @@ TEST_F(CleanerControllerTest, SetSadPath) {
   EXPECT_CALL(*mock_interface, SetAction(Eq(expected_action)))
       .WillOnce(Return(ActuatorStatus::kBad));
 
-  EXPECT_CALL(*mock_observer, Notify(Eq(Event::kHWFault))).Times(1);
+  EXPECT_CALL(*mock_observer_ptr_, Notify(Eq(Event::kCleanerFault))).Times(1);
 
   controller->SetOperation(CleanerAction::kPowerUp);
 }
