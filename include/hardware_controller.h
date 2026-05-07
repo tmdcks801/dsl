@@ -39,11 +39,6 @@ class HardwareController {
       auto& [hardware_interface, event] = interfaces_[i];
       hardware_interface = HardwareInterface::Create<T>(file_path);
       event = interface_events[i];
-
-      if (observer_ && hardware_interface == nullptr) {
-        observer_->Notify(Event::kFileOpenFault);
-        break;
-      }
     }
   }
 
