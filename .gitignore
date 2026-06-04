@@ -465,3 +465,12 @@ cmake_clean.txt
 *.cmake
 
 .cache/
+
+# CMake build directories and accidental CLI argument files
+/build-*/
+/-DCMAKE_*
+
+# Mutation-test artifacts
+/dust_*
+
+docs/
